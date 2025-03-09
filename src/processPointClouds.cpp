@@ -119,7 +119,7 @@ std::vector<typename pcl::PointCloud<PointT>::Ptr> ProcessPointClouds<PointT>::C
     for (auto& getIndices : clusterIndices) {
         typename pcl::PointCloud<PointT>::Ptr clusterCloud(new pcl::PointCloud<PointT>);
 
-        for (int idx : getIndices) clusterCloud->points.push_back(cloud->points[idx]);
+        for (int idx : getIndices.indices) clusterCloud->points.push_back(cloud->points[idx]);
 
         clusterCloud->width = clusterCloud->points.size();
         clusterCloud->height = 1;
