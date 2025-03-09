@@ -80,53 +80,22 @@ void cityBlock(pcl::visualization::PCLVisualizer::Ptr &viewer, ProcessPointCloud
     // -----Open 3D viewer and display City Block     -----
     // ----------------------------------------------------
 
-    // RENDER OPTIONS (Note: Obst + Plane = pointCloud!)
-    bool render_pointCloud = false;
-    bool render_pointCloud_filtered = false;
-    bool render_obst = false;
-    bool render_plane = true;
-    bool render_clusters = true;
-    bool render_box = true;
+    inputCloud = pointProcessor->FilterCloud(inputCloud, 0.3, Eigen::Vector4f(-10, -5, -2, 1), Eigen::Vector4f(30, 8, 1, 1));
+    auto segmentCloud = pointProcessor->SegmentPlane(inputCloud, 25, 0.3);
+    renderPointCloud(viewer, segmentCloud.first, "obstacle cloud", Color(1, 0, 0));
+    renderPointCloud(viewer, segmentCloud.second, "plane cloud", Color(0, 1, 0));
+    auto cloudClusters = pointProcessor->Clustering(segmentCloud.first, 0.53, 10, 500);
 
-    // HYPER PARAMETERS
-    Eigen::Vector4f boxFilterMin = {-10.0f, -6.0f, -5.0f, 1};
-    Eigen::Vector4f boxFilterMax = {35.0f, 7.0f, 5.0f, 1};
-    float voxelFilterResolution = 0.2;
-
-    if (render_pointCloud)
-        renderPointCloud(viewer, inputCloud, "inputCloud"); //overloaded renderPointCloud function for point<XYZI> type.
-
-    // Voxel grid filtering + box filtering to reduce number of points
-    pcl::PointCloud<pcl::PointXYZI>::Ptr filteredCloud = pointProcessor->FilterCloud(inputCloud, voxelFilterResolution, boxFilterMin, boxFilterMax);
-    if (render_pointCloud_filtered)
-        renderPointCloud(viewer, filteredCloud, "filterCloud");
-
-    // Plane segmentation
-    std::pair<pcl::PointCloud<pcl::PointXYZI>::Ptr, pcl::PointCloud<pcl::PointXYZI>::Ptr> segmentCloud = pointProcessor->SegmentPlane(filteredCloud, 100, 0.2);
-    if (render_obst)
-        renderPointCloud(viewer, segmentCloud.first, "obstCloud", Color(1, 0, 0));
-    if (render_plane)
-        renderPointCloud(viewer, segmentCloud.second, "planeCloud", Color(0, 1, 0));
-
-    // Use Point Processor object to identify and render point clusters
-    std::vector<pcl::PointCloud<pcl::PointXYZI>::Ptr> cloudClusters = pointProcessor->Clustering(segmentCloud.first, 1.0, 3, 30);
     int clusterId = 0;
     std::vector<Color> colors = {Color(1, 0, 0), Color(1, 1, 0), Color(0, 0, 1)};
+    for (auto clusterCloud : cloudClusters) {
+        std::cout << "cluster size";
+        pointProcessor->numPoints(clusterCloud);
+        renderPointCloud(viewer, clusterCloud, "obstacle cloud " + std::to_string(clusterId), colors[clusterId % colors.size()]);
 
-    for (pcl::PointCloud<pcl::PointXYZI>::Ptr cluster : cloudClusters)
-    {
-        if (render_clusters)
-        {
-            std::cout << "cluster size ";
-            pointProcessor->numPoints(cluster);
-            renderPointCloud(viewer, cluster, "obstCloud" + std::to_string(clusterId), colors[clusterId % colors.size()]);
-        }
+        auto box = pointProcessor->BoundingBox(clusterCloud);
+        renderBox(viewer, box, clusterId);
 
-        if (render_box)
-        {
-            Box box = pointProcessor->BoundingBox(cluster);
-            renderBox(viewer, box, clusterId);
-        }
         ++clusterId;
     }
 }
@@ -165,7 +134,7 @@ int main(int argc, char **argv)
     initCamera(setAngle, viewer);
 
     // simpleHighway(viewer);
-    ProcessPointClouds<pcl::PointXYZI> *pointProcessor = new ProcessPointClouds<pcl::PointXYZI>();
+    auto* pointProcessor = new ProcessPointClouds<pcl::PointXYZI>();
     std::vector<boost::filesystem::path> stream = pointProcessor->streamPcd("../src/sensors/data/pcd/data_1");
     auto streamIterator = stream.begin();
     pcl::PointCloud<pcl::PointXYZI>::Ptr inputCloud;
