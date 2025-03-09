@@ -68,7 +68,7 @@ std::pair<typename pcl::PointCloud<PointT>::Ptr, typename pcl::PointCloud<PointT
     auto startTime = std::chrono::steady_clock::now();
 	// pcl::PointIndices::Ptr inliers;
     // Fill in this function to find inliers for the cloud.
-    typename pcl::SACSegmentation<pcl::PointT> seg;
+    typename pcl::SACSegmentation<PointT> seg;
     pcl::PointIndices::Ptr inliers {new pcl::PointIndices};
     pcl::ModelCoefficients::Ptr coefficients {new pcl::ModelCoefficients};
 
