@@ -51,8 +51,8 @@ public:
     std::vector<boost::filesystem::path> streamPcd(std::string dataPath);
 
     // new function for segment plane and clustering - custom implementation from scratch using kdtree_3d.hpp, ransac3d.hpp, cluster.hpp files
-    std::pair<typename pcl::PointCloud<PointT>::Ptr, typename pcl::PointCloud<PointT>::Ptr> SegmentPlaneCustom(const typename pcl::PointCloud<PointT>::Ptr &cloud, int maxIterations, float distanceThreshold);
-    std::vector<typename pcl::PointCloud<PointT>::Ptr> ClusteringCustom(const typename pcl::PointCloud<PointT>::Ptr &cloud, float clusterTolerance, int minSize, int maxSize);
+    std::pair<typename pcl::PointCloud<PointT>::Ptr, typename pcl::PointCloud<PointT>::Ptr> SegmentPlaneCustom(typename pcl::PointCloud<PointT>::Ptr& cloud, int maxIterations, float distanceThreshold);
+    std::vector<typename pcl::PointCloud<PointT>::Ptr> ClusteringCustom(typename pcl::PointCloud<PointT>::Ptr& cloud, float clusterTolerance, int minSize, int maxSize);
 
 };
 #endif /* PROCESSPOINTCLOUDS_H_ */

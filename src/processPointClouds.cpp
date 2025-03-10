@@ -229,7 +229,7 @@ std::vector<boost::filesystem::path> ProcessPointClouds<PointT>::streamPcd(std::
 // custom implementations
 
 template <typename PointT>
-std::pair<typename pcl::PointCloud<PointT>::Ptr, typename pcl::PointCloud<PointT>::Ptr> ProcessPointClouds<PointT>::SegmentPlaneCustom(const typename pcl::PointCloud<PointT>::Ptr &cloud, int maxIterations, float distanceThreshold)
+std::pair<typename pcl::PointCloud<PointT>::Ptr, typename pcl::PointCloud<PointT>::Ptr> ProcessPointClouds<PointT>::SegmentPlaneCustom(typename pcl::PointCloud<PointT>::Ptr& cloud, int maxIterations, float distanceThreshold)
 {
     auto startTime = std::chrono::steady_clock::now();
 
@@ -257,4 +257,42 @@ std::pair<typename pcl::PointCloud<PointT>::Ptr, typename pcl::PointCloud<PointT
 
     std::pair<typename pcl::PointCloud<PointT>::Ptr, typename pcl::PointCloud<PointT>::Ptr> segResult(obstacleCloud, planeCloud);
     return segResult;
+}
+
+template<typename PointT>
+std::vector<typename pcl::PointCloud<PointT>::Ptr> ProcessPointClouds<PointT>::ClusteringCustom(typename pcl::PointCloud<PointT>::Ptr& cloud, float clusterTolerance, int minSize, int maxSize)
+{
+    auto startTime = std::chrono::steady_clock::now();
+    std::vector<typename pcl::PointCloud<PointT>::Ptr> clusters;
+    KdTree3D* tree3D = new KdTree3D;
+
+    std::vector<std::vector<float>> pointsVec(cloud->points.size());
+
+    for (int idx = 0; idx < cloud->points.size(); ++idx) {
+        std::vector<float> pointVec = {cloud->points[idx].x, cloud->points[idx].y, cloud->points[idx].z};
+        tree3D->insert(pointVec, idx);
+        pointsVec[idx] = pointVec;
+    }
+
+    std::vector<std::vector<int>> clusterIndices = pcl::EuclideanClusterExtraction<PointT>(pointsVec, tree3D, clusterTolerance, minSize, maxSize);
+
+    for (std::vector<int> cluster : clusterIndices) {
+        typename pcl::PointCloud<PointT>::Ptr clusterCloud(new pcl::PointCloud<PointT>);
+
+        for (int index : cluster)
+            clusterCloud->points.push_back(cloud->points[index]);
+
+        clusterCloud->width = clusterCloud->points.size();
+        clusterCloud->height = 1;
+        clusterCloud->is_dense = true;
+
+        clusters.push_back(clusterCloud);
+
+    }
+
+    auto endTime = std::chrono::steady_clock::now();
+    auto elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime);
+    std::cout << "clustering took " << elapsedTime.count() << " milliseconds and found " << clusters.size() << " clusters" << std::endl;
+
+    return clusters;
 }
