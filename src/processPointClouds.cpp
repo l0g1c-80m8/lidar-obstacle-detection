@@ -266,15 +266,15 @@ std::vector<typename pcl::PointCloud<PointT>::Ptr> ProcessPointClouds<PointT>::C
     std::vector<typename pcl::PointCloud<PointT>::Ptr> clusters;
     KdTree3D* tree3D = new KdTree3D;
 
-    std::vector<std::vector<float>> pointsVec(cloud->points.size());
+    std::vector<std::vector<float>> points(cloud->points.size());
 
     for (int idx = 0; idx < cloud->points.size(); ++idx) {
-        std::vector<float> pointVec = {cloud->points[idx].x, cloud->points[idx].y, cloud->points[idx].z};
-        tree3D->insert(pointVec, idx);
-        pointsVec[idx] = pointVec;
+        std::vector<float> point = {cloud->points[idx].x, cloud->points[idx].y, cloud->points[idx].z};
+        tree3D->insert(point, idx);
+        points[idx] = point;
     }
 
-    std::vector<std::vector<int>> clusterIndices = pcl::EuclideanClusterExtraction<PointT>(pointsVec, tree3D, clusterTolerance, minSize, maxSize);
+    std::vector<std::vector<int>> clusterIndices = euclideanCluster3D(points, tree3D, clusterTolerance, minSize, maxSize);
 
     for (std::vector<int> cluster : clusterIndices) {
         typename pcl::PointCloud<PointT>::Ptr clusterCloud(new pcl::PointCloud<PointT>);
