@@ -296,3 +296,7 @@ std::vector<typename pcl::PointCloud<PointT>::Ptr> ProcessPointClouds<PointT>::C
 
     return clusters;
 }
+
+// explicit instantiations for templates
+template class ProcessPointClouds<pcl::PointXYZ>;
+template class ProcessPointClouds<pcl::PointXYZI>;
