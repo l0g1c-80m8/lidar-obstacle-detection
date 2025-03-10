@@ -74,6 +74,7 @@ void simpleHighway(pcl::visualization::PCLVisualizer::Ptr& viewer)
     }
 }
 
+// use custom segment plane and clustering implementations for cityBlock
 void cityBlock(pcl::visualization::PCLVisualizer::Ptr &viewer, ProcessPointClouds<pcl::PointXYZI>* pointProcessor, pcl::PointCloud<pcl::PointXYZI>::Ptr &inputCloud)
 {
     // ----------------------------------------------------
@@ -81,10 +82,10 @@ void cityBlock(pcl::visualization::PCLVisualizer::Ptr &viewer, ProcessPointCloud
     // ----------------------------------------------------
 
     inputCloud = pointProcessor->FilterCloud(inputCloud, 0.3, Eigen::Vector4f(-10, -5, -2, 1), Eigen::Vector4f(30, 8, 1, 1));
-    auto segmentCloud = pointProcessor->SegmentPlane(inputCloud, 25, 0.3);
+    auto segmentCloud = pointProcessor->SegmentPlaneCustom(inputCloud, 25, 0.3);
     renderPointCloud(viewer, segmentCloud.first, "obstacle cloud", Color(1, 0, 0));
     renderPointCloud(viewer, segmentCloud.second, "plane cloud", Color(0, 1, 0));
-    auto cloudClusters = pointProcessor->Clustering(segmentCloud.first, 0.53, 10, 500);
+    auto cloudClusters = pointProcessor->ClusteringCustom(segmentCloud.first, 0.53, 10, 500);
 
     int clusterId = 0;
     std::vector<Color> colors = {Color(1, 0, 0), Color(1, 1, 0), Color(0, 0, 1)};
