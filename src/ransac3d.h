@@ -5,7 +5,7 @@
 #include <pcl/common/common.h>
 
 template <typename PointT> 
-std::unordered_set<int> Ransac3D(pcl::PointCloud<PointT>::Ptr cloud, int maxIterations, float distanceTol)
+std::unordered_set<int> Ransac3D(typename pcl::PointCloud<PointT>::Ptr cloud, int maxIterations, float distanceTol)
 {
     std::unordered_set<int> inliersResult;
     srand(time(NULL));

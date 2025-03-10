@@ -239,7 +239,7 @@ std::pair<typename pcl::PointCloud<PointT>::Ptr, typename pcl::PointCloud<PointT
     typename pcl::PointCloud<PointT>::Ptr obstacleCloud(new pcl::PointCloud<PointT>());
 
     for (int index = 0; index < cloud->points.size(); index++) {
-        typename PointT point = cloud->points[index];
+        PointT point = cloud->points[index];
         if (inliers.count(index))
             planeCloud->points.push_back(point);
         else
