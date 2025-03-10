@@ -1,4 +1,5 @@
 /* \author Rutvik Patel */
+#pragma once
 
 #include <unordered_set>
 #include <pcl/common/common.h>

@@ -1,4 +1,6 @@
 /* \author Rutvik patel */
+#pragma once
+
 #include "render/render.h"
 #include "render/box.h"
 #include <chrono>

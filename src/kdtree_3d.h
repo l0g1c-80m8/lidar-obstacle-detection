@@ -1,5 +1,5 @@
-/* \author Aaron Brown */
-// Quiz on implementing kd tree
+/* \author Rutvik Patel */
+#pragma once
 
 #include "render/render.h"
 
