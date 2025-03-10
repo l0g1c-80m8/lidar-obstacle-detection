@@ -7,7 +7,7 @@
 #include <string>
 #include "kdtree_3d.h"
 
-void clusterHelper(int idx, const std::vector<std::vector<float>> points, std::vector<int>& cluster, std::vector<bool>& processed, KdTree3D* tree, float distanceTol) {
+inline void clusterHelper(int idx, const std::vector<std::vector<float>> points, std::vector<int>& cluster, std::vector<bool>& processed, KdTree3D* tree, float distanceTol) {
 	if (processed[idx]) return;
 
   	processed[idx] = true;
@@ -21,7 +21,7 @@ void clusterHelper(int idx, const std::vector<std::vector<float>> points, std::v
     }
 }
 
-std::vector<std::vector<int>> euclideanCluster3D(const std::vector<std::vector<float>>& points, KdTree3D* tree, float distanceTol, int minSize, int maxSize)
+inline std::vector<std::vector<int>> euclideanCluster3D(const std::vector<std::vector<float>>& points, KdTree3D* tree, float distanceTol, int minSize, int maxSize)
 {
 
 	// Fill out this function to return list of indices for each cluster
