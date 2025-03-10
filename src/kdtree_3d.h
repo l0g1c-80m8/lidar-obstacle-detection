@@ -23,15 +23,15 @@ struct Node
 	}
 };
 
-struct KdTree
+struct KdTree3D
 {
 	Node* root;
 
-	KdTree()
+	KdTree3D()
 	: root(NULL)
 	{}
 
-	~KdTree()
+	~KdTree3D()
 	{
 		delete root;
 	}
