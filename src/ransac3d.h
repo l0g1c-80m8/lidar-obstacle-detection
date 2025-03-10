@@ -4,7 +4,8 @@
 #include <unordered_set>
 #include <pcl/common/common.h>
 
-std::unordered_set<int> Ransac3D(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, int maxIterations, float distanceTol)
+template <typename PointT> 
+std::unordered_set<int> Ransac3D(pcl::PointCloud<PointT>::Ptr cloud, int maxIterations, float distanceTol)
 {
     std::unordered_set<int> inliersResult;
     srand(time(NULL));
@@ -18,11 +19,11 @@ std::unordered_set<int> Ransac3D(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, int 
         }
 
         auto itr = inliers.begin();
-        pcl::PointXYZ p1 = cloud->points[*itr];
+        PointT p1 = cloud->points[*itr];
         itr++;
-        pcl::PointXYZ p2 = cloud->points[*itr];
+        PointT p2 = cloud->points[*itr];
         itr++;
-        pcl::PointXYZ p3 = cloud->points[*itr];
+        PointT p3 = cloud->points[*itr];
 
         // Compute vectors v1 and v2
         float v1x = p2.x - p1.x;
@@ -47,7 +48,7 @@ std::unordered_set<int> Ransac3D(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, int 
         for (int idx = 0; idx < cloud->points.size(); idx++) {
             if (inliers.count(idx) > 0) continue;  // Skip already selected points
 
-            pcl::PointXYZ point = cloud->points[idx];
+            PointT point = cloud->points[idx];
             float d = fabs(A * point.x + B * point.y + C * point.z + D) / norm;
 
             // If the distance is within tolerance, count it as an inlier
