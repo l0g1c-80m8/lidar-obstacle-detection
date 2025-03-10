@@ -85,7 +85,7 @@ void cityBlock(pcl::visualization::PCLVisualizer::Ptr &viewer, ProcessPointCloud
     auto segmentCloud = pointProcessor->SegmentPlaneCustom(inputCloud, 20, 0.3);
     renderPointCloud(viewer, segmentCloud.first, "obstacle cloud", Color(1, 0, 0));
     renderPointCloud(viewer, segmentCloud.second, "plane cloud", Color(0, 1, 0));
-    auto cloudClusters = pointProcessor->ClusteringCustom(segmentCloud.first, 0.4, 10, 400);
+    auto cloudClusters = pointProcessor->ClusteringCustom(segmentCloud.first, 0.53, 10, 300);
 
     int clusterId = 0;
     std::vector<Color> colors = {Color(1, 0, 0), Color(1, 1, 0), Color(0, 0, 1)};
