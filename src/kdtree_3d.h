@@ -63,12 +63,12 @@ struct KdTree3D
 				(node->point[0] >= target[0] - distanceTol && node->point[0] <= target[0] + distanceTol) &&
 				(node->point[1] >= target[1] - distanceTol && node->point[1] <= target[1] + distanceTol) &&
 				(node->point[2] >= target[2] - distanceTol && node->point[2] <= target[2] + distanceTol)) {
-				auto distance = sqrt(
+				auto squared_distance (
                       (node->point[0] - target[0]) * (node->point[0] - target[0]) +
                       (node->point[1] - target[1]) * (node->point[1] - target[1]) +
                       (node->point[2] - target[2]) * (node->point[2] - target[2])
                 	);
-                if (distance <= distanceTol)
+                if (squared_distance <= distanceTol * distanceTol)
                   ids.push_back(node->id);
         	}
 
