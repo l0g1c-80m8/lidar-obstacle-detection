@@ -17,7 +17,11 @@
 #include <vector>
 #include <ctime>
 #include <chrono>
+#include <unordered_set>
 #include "render/box.h"
+#include "kdtree_3d.h"
+#include "ransac3d.h"
+#include "cluster.h"
 
 template<typename PointT>
 class ProcessPointClouds {
@@ -45,6 +49,10 @@ public:
     typename pcl::PointCloud<PointT>::Ptr loadPcd(std::string file);
 
     std::vector<boost::filesystem::path> streamPcd(std::string dataPath);
-  
+
+    // new function for segment plane and clustering - custom implementation from scratch using kdtree_3d.hpp, ransac3d.hpp, cluster.hpp files
+    std::pair<typename pcl::PointCloud<PointT>::Ptr, typename pcl::PointCloud<PointT>::Ptr> SegmentPlaneCustom(const typename pcl::PointCloud<PointT>::Ptr &cloud, int maxIterations, float distanceThreshold);
+    std::vector<typename pcl::PointCloud<PointT>::Ptr> ClusteringCustom(const typename pcl::PointCloud<PointT>::Ptr &cloud, float clusterTolerance, int minSize, int maxSize);
+
 };
 #endif /* PROCESSPOINTCLOUDS_H_ */
