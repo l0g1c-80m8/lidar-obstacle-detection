@@ -21,7 +21,7 @@ void clusterHelper(int idx, const std::vector<std::vector<float>> points, std::v
     }
 }
 
-std::vector<std::vector<int>> euclideanCluster3D(const std::vector<std::vector<float>>& points, KdTree3D* tree, float distanceTol)
+std::vector<std::vector<int>> euclideanCluster3D(const std::vector<std::vector<float>>& points, KdTree3D* tree, float distanceTol, int minSize, int maxSize)
 {
 
 	// Fill out this function to return list of indices for each cluster
@@ -35,7 +35,8 @@ std::vector<std::vector<int>> euclideanCluster3D(const std::vector<std::vector<f
     	if (!processed[idx]) {
     		std::vector<int> cluster;
     		clusterHelper(idx, points, cluster, processed, tree, distanceTol);
-    		clusters.push_back(cluster);
+			if (cluster.size() >= minSize && cluster.size() <= maxSize)
+    			clusters.push_back(cluster);
     	}
 
         ++idx;
