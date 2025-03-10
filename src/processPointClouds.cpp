@@ -233,7 +233,7 @@ std::pair<typename pcl::PointCloud<PointT>::Ptr, typename pcl::PointCloud<PointT
 {
     auto startTime = std::chrono::steady_clock::now();
 
-    std::unordered_set<int> inliers = Ransac3D(cloud, maxIterations, distanceThreshold);
+    std::unordered_set<int> inliers = Ransac3D<PointT>(cloud, maxIterations, distanceThreshold);
 
     typename pcl::PointCloud<PointT>::Ptr planeCloud(new pcl::PointCloud<PointT>());
     typename pcl::PointCloud<PointT>::Ptr obstacleCloud(new pcl::PointCloud<PointT>());
